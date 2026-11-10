@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1740">
+  <meta name="description" content="Aplikasi Jadwal Pelajaran SMPN Unggulan Sindang">
+  <meta name="application-name" content="Jadwal Pelajaran">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Jadwal Pelajaran">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
+  <title>Jadwal Pelajaran - SMPN Unggulan Sindang</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b1740}
+    #app{width:100%;height:100%;border:0;display:block;background:#fff}
+    #notice{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      padding:24px;color:#fff;text-align:center;font:16px Arial,sans-serif;background:#0b1740}
+  </style>
+</head>
+<body>
+  <div id="notice">Memuat Aplikasi Jadwal Pelajaran…</div>
+  <iframe id="app" title="Aplikasi Jadwal Pelajaran"
+    allow="clipboard-read; clipboard-write"
+    referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  <script>
+    // WAJIB diganti dengan URL Web App Apps Script yang berakhiran /exec.
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCsGDjSUYWmlYfVWas2RVVvglBqL_-MdfgkelliIcrLd2vTZjCJX6bGYeusbq6xbuDNg/exec";
+    const frame = document.getElementById("app");
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf("GANTI_DENGAN") === 0) {
+      document.getElementById("notice").textContent =
+        "Atur APPS_SCRIPT_URL pada file index.html dengan URL Web App Apps Script Anda.";
+      frame.style.display = "none";
+    } else {
+      frame.src = APPS_SCRIPT_URL;
+      frame.addEventListener("load", function(){
+        const n = document.getElementById("notice");
+        if (n) n.remove();
+      });
+    }
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function(){
+        navigator.serviceWorker.register("./sw.js").catch(function(err){
+          console.error("Service worker gagal didaftarkan:", err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

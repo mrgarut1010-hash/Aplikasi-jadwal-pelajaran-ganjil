@@ -1,0 +1,42 @@
+PAKET PWA JADWAL PELAJARAN — SMPN UNGGULAN SINDANG
+
+PENTING:
+Google Apps Script HTML Service tidak dapat meng-host manifest.json dan service worker
+sebagai file statis pada origin web app. Karena itu, paket ini adalah "pembungkus PWA"
+yang harus di-host pada HTTPS statis (misalnya GitHub Pages). Aplikasi Apps Script tetap
+menjadi backend/tampilan utama di dalam iframe.
+
+LANGKAH:
+1. Buka index.html dan ganti:
+   GANTI_DENGAN_URL_WEB_APP_ANDA
+   dengan URL deployment Web App Apps Script yang berakhiran /exec.
+
+2. Di Code.gs, pastikan doGet() menghasilkan:
+   return HtmlService.createTemplateFromFile('Index')
+     .evaluate()
+     .setTitle('Jadwal Mengajar')
+     .addMetaTag('viewport', 'width=device-width, initial-scale=1')
+     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+
+   Jangan mengganti fungsi backend lain (validasi kode, pembacaan sheet, jadwal guru/kelas).
+   ALLOWALL diperlukan karena aplikasi dimuat di dalam iframe wrapper.
+
+3. Deploy Apps Script sebagai New version. Uji URL /exec secara langsung dahulu.
+
+4. Upload SEMUA isi folder paket ini ke repository GitHub, pada root branch publik
+   yang akan digunakan GitHub Pages. Aktifkan Settings > Pages > Deploy from branch.
+   Gunakan branch dan folder root yang berisi index.html, manifest.json, sw.js, dan icons/.
+
+5. Buka URL HTTPS GitHub Pages tersebut di Chrome Android. Tunggu hingga halaman selesai
+   dimuat, lalu menu Chrome > Install app / Add to Home screen.
+
+6. Hapus ikon pintasan lama terlebih dahulu. Setelah mengganti ikon di kemudian hari,
+   naikkan CACHE_NAME di sw.js (misalnya v2) dan pasang ulang pintasan.
+
+CATATAN:
+- Jangan memasang dari URL script.google.com jika ingin memakai manifest dan service worker
+  paket ini. Pasang dari URL GitHub Pages.
+- Google Apps Script perlu mengizinkan iframe melalui setXFrameOptionsMode(ALLOWALL).
+- Jika aplikasi memerlukan autentikasi Google atau dibatasi domain, pengujian iframe perlu
+  dilakukan dengan akun sekolah. Kebijakan browser/cookie pihak ketiga dapat memengaruhi login.
+- Ikon di paket dibuat dari gambar ikon yang Anda unggah.
